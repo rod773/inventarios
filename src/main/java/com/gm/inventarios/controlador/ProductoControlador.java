@@ -26,7 +26,11 @@ public class ProductoControlador {
 
     @GetMapping("/productos")
     public List<Producto> obtenerProductos(){
+        List<Producto> productos = productoServicio.listarProductos();
 
-        return productoServicio.listarProductos();
+        logger.info("Productos Obtenidos");
+
+        productos.forEach(producto -> logger.info(producto.toString()));
+        return productos;
     }
 }
