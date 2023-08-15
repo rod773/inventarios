@@ -21,5 +21,5 @@ public class Producto {
     Integer idProducto;
     String descripcion;
     Double precio;
-    Integer exixtencia;
+    Integer existencia;
 }
