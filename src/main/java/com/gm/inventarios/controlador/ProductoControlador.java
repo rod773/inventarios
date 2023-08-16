@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("inventario-api")
@@ -24,7 +26,7 @@ public class ProductoControlador {
     private ProductoServicio productoServicio;
 
     @GetMapping("/productos")
-    public List<Producto> obtenerProductos(){
+    public List<Producto> obtenerProductos() {
         List<Producto> productos = productoServicio.listarProductos();
 
         logger.info("Productos Obtenidos");
@@ -35,30 +37,29 @@ public class ProductoControlador {
 
 
     @PostMapping("/productos")
-    public Producto abregarProducto(@RequestBody Producto producto){
-        logger.info("Producto a Agregar : "+producto);
+    public Producto abregarProducto(@RequestBody Producto producto) {
+        logger.info("Producto a Agregar : " + producto);
 
         return this.productoServicio.guardarProducto(producto);
     }
 
 
     @GetMapping("/productos/{id}")
-    public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable int id)
-    {
-       Producto producto = productoServicio.buscarProductoPorId(id);
+    public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable int id) {
+        Producto producto = productoServicio.buscarProductoPorId(id);
 
-if(producto != null)
-       return ResponseEntity.ok(producto);
+        if (producto != null)
+            return ResponseEntity.ok(producto);
 
-else
-    throw new RecursoNoEncontradoExcepcion("no se encontró el id : "+id);
+        else
+            throw new RecursoNoEncontradoExcepcion("no se encontró el id : " + id);
     }
 
 
     @PutMapping("/productos/{id}")
     public ResponseEntity<Producto> actualizarProductoPorId(
             @PathVariable int id,
-            @RequestBody Producto productoRecibido){
+            @RequestBody Producto productoRecibido) {
 
         Producto producto = productoServicio.buscarProductoPorId(id);
 
@@ -69,4 +70,22 @@ else
 
         return ResponseEntity.ok(producto);
     }
+
+    @DeleteMapping("/productos/{id}")
+    public ResponseEntity<Map<String, Boolean>> eliminarProducto(@PathVariable int id) {
+
+        Producto producto = productoServicio.buscarProductoPorId(id);
+
+        this.productoServicio.eliminarProductoPorId(producto.getIdProducto());
+
+        Map<String, Boolean> respuesta = new HashMap<>();
+
+        respuesta.put("eliminado", Boolean.TRUE);
+
+        return ResponseEntity.ok(respuesta);
+
+    }
+
 }
+
+
